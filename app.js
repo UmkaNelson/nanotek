@@ -1,13 +1,13 @@
-﻿// ===== ГЛОБАЛЬНЫЙ ФАЙЛ APP.JS =====
+// ===== ГЛОБАЛЬНЫЙ ФАЙЛ APP.JS =====
 
 // Защита от спама
 let lastFormSubmit = 0;
 const MIN_SUBMIT_INTERVAL = 30000; // 30 секунд
 
-function checkSpamProtection() {
+function checkSpamProtection(showToast) {
   const now = Date.now();
   if (now - lastFormSubmit < MIN_SUBMIT_INTERVAL) {
-    alert('Пожалуйста, подождите 30 секунд перед повторной отправкой.');
+    showToast('Пожалуйста, подождите 30 секунд перед повторной отправкой.', 'error');
     return false;
   }
   lastFormSubmit = now;
@@ -19,6 +19,47 @@ function sanitizeInput(input) {
   const div = document.createElement('div');
   div.textContent = input;
   return div.innerHTML;
+}
+
+// Toast уведомления
+function initToast() {
+  let container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    document.body.appendChild(container);
+  }
+}
+
+function showToast(message, type = 'info', duration = 4000) {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+
+  const text = document.createElement('div');
+  text.className = 'toast__message';
+  text.textContent = message;
+
+  const close = document.createElement('button');
+  close.className = 'toast__close';
+  close.innerHTML = '&times;';
+  close.onclick = () => removeToast(toast);
+
+  toast.appendChild(text);
+  toast.appendChild(close);
+
+  container.appendChild(toast);
+
+  const timer = setTimeout(() => removeToast(toast), duration);
+  toast.addEventListener('mouseenter', () => clearTimeout(timer));
+  toast.addEventListener('mouseleave', () => setTimeout(() => removeToast(toast), 1500));
+}
+
+function removeToast(toast) {
+  toast.style.animation = 'toast-out 0.3s forwards';
+  setTimeout(() => toast.remove(), 280);
 }
 
 // Предзагрузка критических изображений
@@ -147,7 +188,7 @@ function initContactForm() {
   form.addEventListener('submit', async function(e) {
     e.preventDefault();
 
-    if (!checkSpamProtection()) return;
+    if (!checkSpamProtection(showToast)) return;
 
     const formData = new FormData(this);
     const name = sanitizeInput(formData.get('name').trim());
@@ -173,7 +214,7 @@ function initContactForm() {
     }
 
     if (!isValid) {
-      alert('Пожалуйста, исправьте ошибки:\n\n' + errors.join('\n'));
+      showToast(errors.join(' • '), 'error', 5000);
       return;
     }
 
@@ -186,12 +227,12 @@ function initContactForm() {
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
 
-      alert('✅ Ваш вопрос успешно отправлен!\n\nМы свяжемся с вами в ближайшее время по указанному номеру телефона.');
+      showToast('Ваш вопрос отправлен! Мы свяжемся с вами по указанному номеру.', 'success', 4500);
       console.log('Отправленные данные:', { name, phone: formatPhone(phone), question });
 
       form.reset();
     } catch (error) {
-      alert('❌ Произошла ошибка при отправке формы. Пожалуйста, попробуйте еще раз или свяжитесь с нами по телефону.');
+      showToast('Произошла ошибка при отправке. Попробуйте еще раз или свяжитесь по телефону.', 'error', 4500);
       console.error('Form submission error:', error);
     } finally {
       submitBtn.textContent = originalText;
@@ -227,7 +268,7 @@ function initPrivacyModal() {
   closeBtn?.addEventListener('click', closeModal);
   acceptBtn?.addEventListener('click', () => {
     closeModal();
-    alert('Вы приняли политику конфиденциальности.');
+    showToast('Вы приняли политику конфиденциальности.', 'success', 3000);
   });
 
   modal.addEventListener('click', (e) => {
@@ -314,6 +355,7 @@ function handleResize() {
 document.addEventListener('DOMContentLoaded', function() {
   console.log('🚀 НАНОТЕК - Инициализация сайта');
 
+  initToast();
   preloadCriticalImages();
   initMobileMenu();
   initSmoothScroll();
