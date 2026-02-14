@@ -68,9 +68,9 @@ function preloadCriticalImages() {
 
   const images = [
     './images/logo-main.png',
-    './images/pick1.jpg',
-    './images/pick2.jpg',
-    './images/pick3.jpg'
+    './images/pick11.jpg',
+    './images/pick21.jpg',
+    './images/pick31.jpg'
   ];
 
   images.forEach(src => {
