@@ -500,7 +500,7 @@ a:hover {
 
 .info-link a {
   font-weight: 600;
-  word-break: break-all;
+  word-break: normal;
 }
 
 /* ===== О КОМПАНИИ ===== */
@@ -863,6 +863,45 @@ a:hover {
 @keyframes toast-out {
   from { opacity: 1; transform: translateY(0); }
   to { opacity: 0; transform: translateY(20px); }
+}
+
+/* Mobile text safety: no hard word splitting, slightly smaller type */
+@media (max-width: 767px) {
+  .section-title,
+  h1, h2, h3, h4, h5, h6,
+  .subtitle,
+  p,
+  li,
+  a {
+    word-break: normal;
+    overflow-wrap: normal;
+    hyphens: manual;
+  }
+
+  .section-title,
+  h1, h2, h3, h4, h5, h6,
+  .subtitle {
+    font-size: 1.35rem;
+    line-height: 1.25;
+  }
+
+  p,
+  .definition-list li,
+  .advantage-subtitle,
+  .requisites-text,
+  .contact-value {
+    font-size: 1rem;
+  }
+
+  .services-title {
+    padding: 10px 12px;
+  }
+
+  /* Allow long URLs to wrap on mobile without horizontal overflow */
+  .info-link a {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
 }
 
 /* ===== MEDIA QUERIES: TABLET (768px+) ===== */
