@@ -906,6 +906,18 @@ a:hover {
     line-height: 1.25;
   }
 
+  .section-title.legal-title {
+    font-size: clamp(0.9rem, 4.2vw, 1.2rem);
+    line-height: 1.25;
+  }
+
+  .footer-tagline {
+    white-space: nowrap;
+    font-size: clamp(0.82rem, 4vw, 0.95rem);
+    line-height: 1.2;
+    max-width: 100%;
+  }
+
   p,
   .definition-list li,
   .advantage-subtitle,
