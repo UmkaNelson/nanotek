@@ -70,6 +70,11 @@ main {
   background-color: var(--color-secondary);
 }
 
+/* Секция "О компании": уменьшаем верхний внутренний отступ */
+#about.section {
+  padding-top: clamp(30px, 5vw, 50px);
+}
+
 .section-title {
   font-size: 1.5rem;
   font-weight: 700;
@@ -80,8 +85,20 @@ main {
   overflow-wrap: break-word;
 }
 
-/* Секция О компании: убираем лишний отступ перед текстом */
-#about .section-title { margin-bottom: 8px; }
+.section-title.legal-title {
+  line-height: 1.2;
+}
+
+.section-title.legal-title span {
+  display: block;
+  white-space: nowrap;
+}
+
+/* Секция О компании: уменьшаем верхний отступ вдвое и добавляем отступ снизу */
+#about .section-title {
+  margin-top: 0.415em; /* половина стандартного h2 margin-top (~0.83em) */
+  margin-bottom: clamp(28px, 4vw, 48px);
+}
 #about .about-text { margin-top: 0; }
 
 /* ЗАГОЛОВКИ */
@@ -440,6 +457,10 @@ a:hover {
 }
 
 /* ===== ФОРМУЛА УСПЕХА (MOBILE) ===== */
+.formula-title {
+  text-align: center;
+}
+
 .formula-grid {
   display: grid;
   grid-template-columns: 1fr;
